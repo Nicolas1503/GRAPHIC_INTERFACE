@@ -11,7 +11,9 @@ def index_html():
     velocidad = last_line.split(';')[0]
     periodo = last_line.split(';')[1]
     n_helices = last_line.split(';')[2]
-    return render_template('index.html', vel = velocidad, per = periodo, n_helices = n_helices)
+    rssi_value = last_line.split(';')[3]
+
+    return render_template('index.html', vel = velocidad, per = periodo, n_helices = n_helices, rssi_value = rssi_value)
 
 
 if __name__ == '__main__':

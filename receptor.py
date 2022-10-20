@@ -110,7 +110,7 @@ while True:
 
     data = line.split("'")[1]
     with open('log.txt', 'a') as f:
-        f.write(data + "\n" )
+        f.write(data+ "\n" )
 
     time.sleep(0.01)
 
