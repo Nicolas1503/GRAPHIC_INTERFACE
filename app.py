@@ -1,5 +1,6 @@
 from flask import Flask,render_template,request,redirect,url_for
 import random
+import receptor
 app = Flask(__name__)
 
 @app.route("/")
@@ -17,4 +18,5 @@ def index_html():
 
 
 if __name__ == '__main__':
+    receptor.start_rcv()
     app.run()

@@ -23,7 +23,7 @@ to_send = [rgb,upstairs,downstaris,timer1,timer2]
 # Mutex
 lock = threading.Lock()
 
-class Serialthreadsend(Thread):
+class SerialthreadReceive(Thread):
 
     def __init__(self,name):
         super().__init__()
@@ -32,18 +32,21 @@ class Serialthreadsend(Thread):
     def run(self):
 
         # Thread started
+        ser = serial.Serial(serial_choose(),9600)
         print("Start thread : {}".format(self.name))
         
         # Forever
         while True:
-            for b in to_send:
-                lock.acquire()
-                if ser.isOpen():
-                    ser.write(b)
-                else:
-                    print("SerialPort closed")
-                lock.release()
-                time.sleep(10)
+            lock.acquire()
+            line = ser.readline().decode('ascii')
+            lock.release()
+            print(line)
+
+            data = line.split("'")[1]
+            with open('log.txt', 'a') as f:
+                f.write(data+ "\n" )
+
+            time.sleep(0.01)
 
 def serial_ports():
     if sys.platform.startswith('win'):
@@ -96,23 +99,24 @@ def serial_choose():
     print("Puerto serie elegido : " + chosen_serial)
     return chosen_serial
 
-ser = serial.Serial(serial_choose(),9600)
+# ser = serial.Serial(serial_choose(),9600)
 
-#send_loop = Serialthreadsend('SEND LOOP')
-#send_loop.start()
+def start_rcv():
+    rcv_loop = SerialthreadReceive('RECEIVE LOOP')
+    rcv_loop.start()
 
 
-while True:
-    lock.acquire()
-    line = ser.readline().decode('ascii')
-    lock.release()
-    print(line)
+# while True:
+#     lock.acquire()
+#     line = ser.readline().decode('ascii')
+#     lock.release()
+#     print(line)
 
-    data = line.split("'")[1]
-    with open('log.txt', 'a') as f:
-        f.write(data+ "\n" )
+#     data = line.split("'")[1]
+#     with open('log.txt', 'a') as f:
+#         f.write(data+ "\n" )
 
-    time.sleep(0.01)
+#     time.sleep(0.01)
 
 
 
